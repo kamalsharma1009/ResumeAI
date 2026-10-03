@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item active">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">AD</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">Administrator</span>
+            <span class="user-role-badge" id="nav-user-role">ADMIN</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>System Administration Console</h2>
+          <p>Global account management, platform metrics and audit tracking</p>
+        </div>
+        <div class="topbar-actions" style="display: flex; gap: 10px; align-items: center;">
+          <button id="reseedBtn" class="btn btn-sm btn-outline" style="border-color: var(--accent-cyan); color: var(--accent-cyan);" title="Sync and refresh demo candidate profiles & jobs">
+            🔄 Re-Seed Demo Data
+          </button>
+          <span class="badge badge-success">● System Operational</span>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- 4 Global Metrics -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">👥</div>
+            <div class="stat-content">
+              <span class="stat-value" id="adm-total-users">0</span>
+              <span class="stat-label">Total Accounts</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon cyan">📄</div>
+            <div class="stat-content">
+              <span class="stat-value" id="adm-total-resumes">0</span>
+              <span class="stat-label">Total Resumes</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon emerald">💼</div>
+            <div class="stat-content">
+              <span class="stat-value" id="adm-total-jobs">0</span>
+              <span class="stat-label">Active Jobs</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">⚡</div>
+            <div class="stat-content">
+              <span class="stat-value" id="adm-total-scans">0</span>
+              <span class="stat-label">Total AI Scans</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">User Accounts Directory</h3>
+            <span class="badge badge-primary">Role-Based Access Control</span>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Full Name</th>
+                  <th>Email</th>
+                  <th>System Role</th>
+                  <th>Account Status</th>
+                  <th>Registration Date</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    async function loadAdminData() {
+      try {
+        const data = await apiCall('/analytics/admin');
+        const stats = data.stats || {};
+        document.getElementById('adm-total-users').textContent = stats.total_users || 0;
+        document.getElementById('adm-total-resumes').textContent = stats.total_resumes || 0;
+        document.getElementById('adm-total-jobs').textContent = stats.total_jobs || 0;
+        document.getElementById('adm-total-scans').textContent = stats.total_scans || 0;
+
+        const tbody = document.getElementById('admin-users-tbody');
+        tbody.innerHTML = (data.users || []).map(u => `
+          <tr>
+            <td>#${u.id}</td>
+            <td style="font-weight: 600; color: var(--text-primary);">${u.full_name}</td>
+            <td>${u.email}</td>
+            <td>
+              <span class="badge ${u.role === 'ADMIN' ? 'badge-danger' : (u.role === 'HR' ? 'badge-warning' : 'badge-primary')}">
+                ${u.role}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-success">${u.is_active ? 'Active' : 'Disabled'}</span>
+            </td>
+            <td>${u.created_at}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        showToast('Admin access restricted or error: ' + err.message, 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadAdminData();
+
+      document.getElementById('reseedBtn')?.addEventListener('click', async () => {
+        if (!confirm('Re-seed and verify all demo candidate profiles and jobs?')) return;
+        try {
+          showToast('Synchronizing demo dataset...', 'info');
+          const res = await apiCall('/analytics/reseed', 'POST');
+          showToast(res.message, 'success');
+          await loadAdminData();
+        } catch (err) {
+          showToast('Re-seed failed: ' + err.message, 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

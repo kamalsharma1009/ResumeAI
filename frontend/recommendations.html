@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Recommendations - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item active">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>AI Career & Role Recommendations</h2>
+          <p>Explainable career pathing, role fit confidence, and resume optimization tips</p>
+        </div>
+        <div class="topbar-actions">
+          <select id="resumeSelector" class="form-control" style="width: 240px; padding: 6px 12px; font-size: 0.85rem;">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- Predicted Roles Section -->
+        <div style="margin-bottom: 32px;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title" style="font-size: 1.3rem;">AI Suggested Roles</h3>
+              <p style="color: var(--text-muted); font-size: 0.86rem; margin-top: 4px;">
+                Probabilistic role matching derived from skills density, project relevance, and TF-IDF career benchmarks.
+              </p>
+            </div>
+          </div>
+
+          <div id="roles-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; margin-top: 16px;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Targeted Resume Improvements Section -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Actionable Resume Improvements</h3>
+            <span class="badge badge-primary">Recruiter Polish</span>
+          </div>
+          <div id="recs-list-container" style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    let activeResumeId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlId = urlParams.get('id');
+
+      try {
+        const resumes = await apiCall('/resumes');
+        const selector = document.getElementById('resumeSelector');
+
+        if (!resumes || resumes.length === 0) {
+          document.getElementById('roles-cards-grid').innerHTML = '<p class="text-muted">No resumes found. Please upload a resume first.</p>';
+          return;
+        }
+
+        selector.innerHTML = resumes.map(r => `
+          <option value="${r.id}" ${urlId == r.id ? 'selected' : ''}>
+            ${r.candidate_name || 'Candidate'} (${r.original_filename})
+          </option>
+        `).join('');
+
+        activeResumeId = urlId || selector.value;
+        await loadRecommendations(activeResumeId);
+
+        selector.addEventListener('change', async (e) => {
+          activeResumeId = e.target.value;
+          await loadRecommendations(activeResumeId);
+        });
+      } catch (err) {
+        showToast('Error initializing recommendations: ' + err.message, 'error');
+      }
+    });
+
+    async function loadRecommendations(resumeId) {
+      try {
+        const data = await apiCall(`/recommendations/${resumeId}`);
+        renderRoles(data.predicted_roles || []);
+        renderImprovements(data.recommendations || []);
+      } catch (err) {
+        showToast('Failed to fetch recommendations: ' + err.message, 'error');
+      }
+    }
+
+    function renderRoles(roles) {
+      const container = document.getElementById('roles-cards-grid');
+      if (roles.length === 0) {
+        container.innerHTML = '<p class="text-muted">No role predictions generated yet.</p>';
+        return;
+      }
+
+      container.innerHTML = roles.map(r => `
+        <div class="card" style="border-top: 3px solid var(--primary);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+            <div>
+              <h4 style="font-size: 1.15rem; color: var(--text-primary);">${r.role_title}</h4>
+              <div style="font-size: 0.78rem; color: var(--accent-cyan); font-weight: 600; margin-top: 2px;">AI Suggested Role</div>
+            </div>
+            <span class="badge ${r.confidence_score >= 70 ? 'badge-success' : 'badge-primary'}">${r.confidence_score}% Fit</span>
+          </div>
+
+          <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 14px;">
+            ${r.description}
+          </p>
+
+          <div style="background-color: var(--bg-surface); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-light); margin-bottom: 14px;">
+            <div style="font-size: 0.76rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">Matched Competencies</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+              ${(r.matched_core_skills || []).map(s => `<span class="badge badge-success" style="font-size: 0.72rem;">${s}</span>`).join('') || '<span class="text-muted" style="font-size: 0.75rem;">None</span>'}
+            </div>
+          </div>
+
+          <div style="font-size: 0.82rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 10px;">
+            <strong>Explainability:</strong> ${r.explanation}
+          </div>
+
+          <div style="margin-top: 14px;">
+            <a href="/roadmap.html?id=${activeResumeId}&role=${encodeURIComponent(r.role_title)}" class="btn btn-sm btn-outline" style="width: 100%;">
+              Generate Roadmap for This Role
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderImprovements(recs) {
+      const container = document.getElementById('recs-list-container');
+      if (recs.length === 0) {
+        container.innerHTML = '<p class="text-muted">No critical improvements needed.</p>';
+        return;
+      }
+
+      container.innerHTML = recs.map(rec => {
+        let badgeClass = 'badge-primary';
+        if (rec.priority === 'High') badgeClass = 'badge-danger';
+        if (rec.priority === 'Medium') badgeClass = 'badge-warning';
+
+        return `
+          <div style="background-color: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.1rem;">💡</span>
+                <h4 style="font-size: 1rem; color: var(--text-primary); font-weight: 600;">${rec.title}</h4>
+              </div>
+              <span class="badge ${badgeClass}">${rec.priority} Priority</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-left: 28px;">
+              ${rec.description}
+            </p>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

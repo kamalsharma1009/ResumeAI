@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidates Directory - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item active">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>Candidate Talent Directory</h2>
+          <p>Search, filter, and inspect scanned candidate resumes</p>
+        </div>
+        <div class="topbar-actions">
+          <a href="/upload.html" class="btn btn-primary btn-sm">+ Upload Candidate</a>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div class="card" style="margin-bottom: 24px;">
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <input type="text" id="candSearchInput" class="form-control" placeholder="Search candidate name, email or file..." style="max-width: 380px;">
+            <button id="candSearchBtn" class="btn btn-secondary btn-sm">Filter</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Candidate Name</th>
+                  <th>Email & Contact</th>
+                  <th>Experience</th>
+                  <th>File Format</th>
+                  <th>Uploaded Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="candidates-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadCandidates();
+
+      document.getElementById('candSearchBtn')?.addEventListener('click', () => {
+        const query = document.getElementById('candSearchInput').value.trim();
+        loadCandidates(query);
+      });
+    });
+
+    async function loadCandidates(search = '') {
+      const tbody = document.getElementById('candidates-tbody');
+      try {
+        let endpoint = '/resumes';
+        if (search) endpoint += `?search=${encodeURIComponent(search)}`;
+        const resumes = await apiCall(endpoint);
+
+        if (!resumes || resumes.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">No candidates recorded. Upload a resume to populate directory.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = resumes.map(r => `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--text-primary);">${r.candidate_name || 'Candidate'}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">${r.original_filename}</div>
+            </td>
+            <td>
+              <div>${r.candidate_email || 'Not specified'}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">${r.candidate_phone || ''}</div>
+            </td>
+            <td>
+              <span class="badge badge-primary">${r.candidate_experience_years || 0} Years</span>
+            </td>
+            <td>
+              <span class="badge ${r.file_type === 'pdf' ? 'badge-cyan' : 'badge-warning'}">${r.file_type.toUpperCase()}</span>
+            </td>
+            <td>${formatDate(r.created_at)}</td>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <a href="/analysis.html?id=${r.id}" class="btn btn-sm btn-secondary">Analyze</a>
+                <a href="${getAuthDownloadUrl('/api/reports/' + r.id + '/download')}" target="_blank" class="btn btn-sm btn-outline">PDF</a>
+                <button class="btn btn-sm btn-danger" onclick="deleteResumeItem(${r.id})">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        showToast('Failed to load candidates: ' + err.message, 'error');
+      }
+    }
+
+    window.deleteResumeItem = async function(id) {
+      if (!confirm('Are you sure you want to delete this resume and its analysis?')) return;
+      try {
+        await apiCall(`/resumes/${id}`, 'DELETE');
+        showToast('Resume deleted successfully.', 'success');
+        await loadCandidates();
+      } catch (err) {
+        showToast('Delete failed: ' + err.message, 'error');
+      }
+    };
+  </script>
+</body>
+</html>

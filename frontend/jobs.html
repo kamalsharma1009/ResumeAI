@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jobs Management - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item active">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>Job Postings & Requirements</h2>
+          <p>Define role criteria, match candidates, and track applicants</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="openCreateJobBtn" class="btn btn-primary btn-sm">+ Create New Job</button>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- Search and Filter Bar -->
+        <div style="display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+          <input type="text" id="jobSearchInput" class="form-control" placeholder="Search by job title, company, or location..." style="max-width: 400px;">
+          <button id="searchJobsBtn" class="btn btn-secondary btn-sm">Search</button>
+        </div>
+
+        <!-- Jobs Grid Container -->
+        <div id="jobs-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px;">
+          <!-- Dynamically loaded jobs -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create Job Modal -->
+  <div id="createJobModal" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; color: var(--text-primary);">Create Job Description</h3>
+        <button id="closeCreateModalBtn" style="background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer;">&times;</button>
+      </div>
+      <form id="create-job-form">
+        <div class="modal-body">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label" for="jobTitle">Job Title *</label>
+              <input type="text" id="jobTitle" class="form-control" placeholder="e.g. Senior Python Developer" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="jobCompany">Company Name *</label>
+              <input type="text" id="jobCompany" class="form-control" placeholder="e.g. TechCorp Solutions" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="jobDesc">Job Description *</label>
+            <textarea id="jobDesc" class="form-control" rows="4" placeholder="Detail the duties, architectural expectations, and team goals..." required></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label" for="jobReqSkills">Required Skills (Comma separated)</label>
+              <input type="text" id="jobReqSkills" class="form-control" placeholder="Python, FastAPI, Docker, SQL">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="jobPrefSkills">Preferred Skills</label>
+              <input type="text" id="jobPrefSkills" class="form-control" placeholder="AWS, Redis, Kubernetes">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label class="form-label" for="jobExp">Min Experience (Yrs)</label>
+              <input type="number" id="jobExp" class="form-control" value="1.0" step="0.5" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="jobEdu">Education</label>
+              <input type="text" id="jobEdu" class="form-control" placeholder="B.Tech / MCA">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="jobLoc">Location</label>
+              <input type="text" id="jobLoc" class="form-control" placeholder="e.g. Bengaluru / Remote">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancelCreateModalBtn" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Job Posting</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Candidates Modal for a Job -->
+  <div id="jobCandidatesModal" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 id="modalCandidatesJobTitle" style="font-size: 1.15rem; color: var(--text-primary);">Matched Candidates</h3>
+        <button id="closeCandidatesModalBtn" style="background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Experience</th>
+                <th>Compatibility Score</th>
+                <th>Missing Skills</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="job-candidates-tbody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadJobs();
+
+      // Search
+      document.getElementById('searchJobsBtn')?.addEventListener('click', () => {
+        const query = document.getElementById('jobSearchInput').value.trim();
+        loadJobs(query);
+      });
+
+      // Modals
+      const createModal = document.getElementById('createJobModal');
+      document.getElementById('openCreateJobBtn')?.addEventListener('click', () => createModal.classList.add('show'));
+      document.getElementById('closeCreateModalBtn')?.addEventListener('click', () => createModal.classList.remove('show'));
+      document.getElementById('cancelCreateModalBtn')?.addEventListener('click', () => createModal.classList.remove('show'));
+
+      // Create form
+      document.getElementById('create-job-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        try {
+          await apiCall('/jobs', 'POST', {
+            title: document.getElementById('jobTitle').value.trim(),
+            company: document.getElementById('jobCompany').value.trim(),
+            description: document.getElementById('jobDesc').value.trim(),
+            required_skills: document.getElementById('jobReqSkills').value.trim(),
+            preferred_skills: document.getElementById('jobPrefSkills').value.trim(),
+            min_experience: parseFloat(document.getElementById('jobExp').value || 0),
+            education: document.getElementById('jobEdu').value.trim(),
+            location: document.getElementById('jobLoc').value.trim()
+          });
+          showToast('Job posting saved successfully!', 'success');
+          createModal.classList.remove('show');
+          document.getElementById('create-job-form').reset();
+          await loadJobs();
+        } catch (err) {
+          showToast('Failed to create job: ' + err.message, 'error');
+        }
+      });
+
+      // Candidates modal close
+      const candModal = document.getElementById('jobCandidatesModal');
+      document.getElementById('closeCandidatesModalBtn')?.addEventListener('click', () => candModal.classList.remove('show'));
+    });
+
+    async function loadJobs(search = '') {
+      const container = document.getElementById('jobs-container');
+      try {
+        let endpoint = '/jobs';
+        if (search) endpoint += `?search=${encodeURIComponent(search)}`;
+        const jobs = await apiCall(endpoint);
+
+        if (!jobs || jobs.length === 0) {
+          container.innerHTML = '<p class="text-muted" style="grid-column: 1/-1;">No jobs found. Click "+ Create New Job" to post one!</p>';
+          return;
+        }
+
+        container.innerHTML = jobs.map(j => `
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+              <div>
+                <h3 style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 4px;">${j.title}</h3>
+                <span style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">${j.company}</span>
+              </div>
+              <span class="badge badge-primary">${j.location || 'Remote'}</span>
+            </div>
+
+            <p style="font-size: 0.86rem; color: var(--text-secondary); margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+              ${j.description}
+            </p>
+
+            <div style="margin-bottom: 14px;">
+              <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 6px;">Required Stack</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                ${(j.required_skills || '').split(',').filter(Boolean).map(s => `<span class="badge badge-cyan">${s.trim()}</span>`).join('') || '<span class="text-muted" style="font-size: 0.8rem;">Open requirements</span>'}
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 14px; margin-top: auto; flex-wrap: wrap; gap: 8px;">
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Min Exp: ${j.min_experience} yrs</span>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sm btn-primary" onclick="quickMatchJob(${j.id}, '${j.title.replace(/'/g, "\\'")}')" title="Evaluate compatibility with your active resume">
+                  ⚡ Match Fit
+                </button>
+                <button class="btn btn-sm btn-outline" onclick="viewJobCandidates(${j.id}, '${j.title.replace(/'/g, "\\'")}')" title="View ranked applicant pool">
+                  Applicants
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        showToast('Failed to load jobs: ' + err.message, 'error');
+      }
+    }
+
+    window.viewJobCandidates = async function(jobId, jobTitle) {
+      const modal = document.getElementById('jobCandidatesModal');
+      const titleElem = document.getElementById('modalCandidatesJobTitle');
+      const tbody = document.getElementById('job-candidates-tbody');
+      
+      titleElem.textContent = `Ranked Candidates for ${jobTitle}`;
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading ranked matches...</td></tr>';
+      modal.classList.add('show');
+
+      try {
+        const candidates = await apiCall(`/jobs/${jobId}/candidates`);
+        if (!candidates || candidates.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No candidates have been evaluated against this job yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = candidates.map(c => `
+          <tr>
+            <td>
+              <div style="font-weight: 600; color: var(--text-primary);">${c.candidate_name || 'Candidate'}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">${c.candidate_email || ''}</div>
+            </td>
+            <td>${c.experience_years} yrs</td>
+            <td>
+              <span class="badge ${c.match_score >= 75 ? 'badge-success' : 'badge-warning'}">${c.match_score}%</span>
+            </td>
+            <td>
+              <div style="max-width: 200px; font-size: 0.8rem; color: var(--accent-rose); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                ${c.missing_skills.join(', ') || 'None'}
+              </div>
+            </td>
+            <td>
+              <a href="/analysis.html?id=${c.resume_id}" class="btn btn-sm btn-secondary">Report</a>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color: var(--accent-rose);">Error: ${err.message}</td></tr>`;
+      }
+    };
+
+    window.quickMatchJob = async function(jobId, jobTitle) {
+      try {
+        showToast(`Running AI match engine for "${jobTitle}"...`, 'info');
+        const match = await apiCall(`/jobs/${jobId}/quick-match`, 'POST');
+        showToast(`Matched with ${match.match_score}% compatibility!`, 'success');
+        setTimeout(() => {
+          window.location.href = `/analysis.html?id=${match.resume_id}`;
+        }, 600);
+      } catch (err) {
+        showToast('Evaluation failed: ' + err.message, 'error');
+      }
+    };
+  </script>
+</body>
+</html>

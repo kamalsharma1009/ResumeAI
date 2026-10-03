@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Analysis Report - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .subscore-item {
+      margin-bottom: 14px;
+    }
+    .subscore-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>AI Resume Intelligence Evaluation</h2>
+          <p>Consolidated scoring, skill taxonomy, role prediction & gap analysis</p>
+        </div>
+        <div class="topbar-actions">
+          <a id="btn-view-roadmap" href="#" class="btn btn-sm btn-secondary">Learning Roadmap</a>
+          <a id="btn-view-interview" href="#" class="btn btn-sm btn-secondary">Interview Prep</a>
+          <a id="btn-download-pdf" href="#" class="btn btn-sm btn-primary" target="_blank">
+            <span>📥 Download PDF Report</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- Candidate Overview Banner Card -->
+        <div class="card" style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white;">
+                👤
+              </div>
+              <div>
+                <h3 id="cand-name" style="font-size: 1.4rem; color: var(--text-primary); margin-bottom: 4px;">Candidate Name</h3>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-secondary);">
+                  <span>📧 <span id="cand-email">email@domain.com</span></span>
+                  <span>📱 <span id="cand-phone">+1 234 567 890</span></span>
+                  <span>📍 <span id="cand-loc">City, Country</span></span>
+                  <span>💼 Exp: <span id="cand-exp">0.0 Years</span></span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <span class="badge badge-primary" id="cand-filename">resume.pdf</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Column Layout: Left Column (ATS Gauge & Subscores), Right Column (Job Match & Skills) -->
+        <div style="display: grid; grid-template-columns: 360px 1fr; gap: 24px; margin-bottom: 24px;">
+          <!-- Left Column: Circular ATS Gauge & Sub-factors -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">AI ATS-Style Score</h3>
+              <span class="badge badge-success">Calibrated</span>
+            </div>
+
+            <!-- Circular Gauge -->
+            <div class="ats-score-container">
+              <div class="circular-gauge">
+                <svg>
+                  <circle cx="80" cy="80" r="70" class="gauge-bg"></circle>
+                  <circle id="ats-gauge-circle" cx="80" cy="80" r="70" class="gauge-progress"></circle>
+                </svg>
+                <div class="gauge-center-text">
+                  <div class="gauge-number" id="ats-gauge-number">0%</div>
+                  <div class="gauge-label">ATS Score</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subscores Progress Bars -->
+            <div style="margin-top: 16px;">
+              <div class="subscore-item">
+                <div class="subscore-header">
+                  <span style="color: var(--text-secondary);">Skills Depth</span>
+                  <span id="score-skills-val" style="color: var(--text-primary);">0%</span>
+                </div>
+                <div class="progress-bar-wrap" style="height: 6px; margin: 0;">
+                  <div id="score-skills" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div class="subscore-item">
+                <div class="subscore-header">
+                  <span style="color: var(--text-secondary);">Experience Impact</span>
+                  <span id="score-exp-val" style="color: var(--text-primary);">0%</span>
+                </div>
+                <div class="progress-bar-wrap" style="height: 6px; margin: 0;">
+                  <div id="score-exp" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div class="subscore-item">
+                <div class="subscore-header">
+                  <span style="color: var(--text-secondary);">Education Alignment</span>
+                  <span id="score-edu-val" style="color: var(--text-primary);">0%</span>
+                </div>
+                <div class="progress-bar-wrap" style="height: 6px; margin: 0;">
+                  <div id="score-edu" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div class="subscore-item">
+                <div class="subscore-header">
+                  <span style="color: var(--text-secondary);">Action Keywords</span>
+                  <span id="score-kw-val" style="color: var(--text-primary);">0%</span>
+                </div>
+                <div class="progress-bar-wrap" style="height: 6px; margin: 0;">
+                  <div id="score-kw" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div class="subscore-item">
+                <div class="subscore-header">
+                  <span style="color: var(--text-secondary);">Completeness</span>
+                  <span id="score-comp-val" style="color: var(--text-primary);">0%</span>
+                </div>
+                <div class="progress-bar-wrap" style="height: 6px; margin: 0;">
+                  <div id="score-comp" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <div class="subscore-item">
+                <div class="subscore-header">
+                  <span style="color: var(--text-secondary);">Text & Formatting</span>
+                  <span id="score-fmt-val" style="color: var(--text-primary);">0%</span>
+                </div>
+                <div class="progress-bar-wrap" style="height: 6px; margin: 0;">
+                  <div id="score-fmt" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Target Job Match & Categorized Skills -->
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Target Job Match Section -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Job Compatibility & Skill Overlap</h3>
+                <span class="badge badge-cyan">Semantic Match</span>
+              </div>
+              <div id="job-match-section">
+                <!-- Dynamically populated or CTA to run match -->
+              </div>
+            </div>
+
+            <!-- Categorized Skills Section -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Identified Technical & Soft Skills</h3>
+                <span class="badge badge-primary">Taxonomy Extractor</span>
+              </div>
+              <div id="skills-categorized-container">
+                <!-- Populated by analysis.js -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Column Cards: AI Suggested Roles, Skill Gaps, Resume Improvements -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <!-- AI Suggested Career Roles -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">AI Suggested Roles</h3>
+              <span class="badge badge-warning">ML Predictor</span>
+            </div>
+            <div id="predicted-roles-container">
+              <!-- Populated by analysis.js -->
+            </div>
+          </div>
+
+          <!-- Skill Gap Analysis -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Skill Gap Analysis</h3>
+              <span class="badge badge-danger">High Priority Gaps</span>
+            </div>
+            <div id="skill-gaps-container">
+              <!-- Populated by analysis.js -->
+            </div>
+          </div>
+
+          <!-- Resume Improvements -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Targeted Improvements</h3>
+              <span class="badge badge-cyan">Recruiter Insights</span>
+            </div>
+            <div id="recommendations-container">
+              <!-- Populated by analysis.js -->
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Job Match Selection Modal -->
+  <div id="jobMatchModal" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; color: var(--text-primary);">Compare Resume Against Job</h3>
+        <button id="closeMatchModalBtn" style="background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px;">
+          Select an active job posting from your company database to perform TF-IDF cosine comparison and identify missing skills.
+        </p>
+        <div class="form-group">
+          <label class="form-label" for="modalJobSelect">Target Job Position</label>
+          <select id="modalJobSelect" class="form-control">
+            <!-- Options dynamically loaded -->
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="runJobMatchBtn" class="btn btn-primary">Run AI Matching</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/analysis.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Scanner - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item active">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>AI Resume Scanner</h2>
+          <p>Extract taxonomy, calculate ATS score and generate career insights</p>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div style="max-width: 800px; margin: 0 auto;">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Upload Candidate Resume</h3>
+              <span class="badge badge-primary">PDF or DOCX</span>
+            </div>
+
+            <!-- Instant Demo Scanner Quick-Picks -->
+            <div style="background: rgba(59, 130, 246, 0.08); border: 1px dashed rgba(59, 130, 246, 0.4); border-radius: var(--radius-md); padding: 18px; margin-bottom: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div>
+                  <h4 style="font-size: 0.95rem; color: var(--primary); font-weight: 700;">⚡ Instant Live Demo Scanning</h4>
+                  <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px;">
+                    Don't have a resume PDF handy? Click a pre-configured candidate profile to test real-time AI parsing & scoring.
+                  </p>
+                </div>
+                <span class="badge badge-primary">One-Click Test</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                <button type="button" class="btn btn-sm btn-outline demo-scan-btn" data-profile="Python" style="text-align: left; justify-content: flex-start;">
+                  <span>🐍 Senior Python Backend</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline demo-scan-btn" data-profile="Priya" style="text-align: left; justify-content: flex-start;">
+                  <span>🤖 Data Scientist & NLP</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline demo-scan-btn" data-profile="Alex" style="text-align: left; justify-content: flex-start;">
+                  <span>☁️ DevOps & Cloud Architect</span>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline demo-scan-btn" data-profile="Ananya" style="text-align: left; justify-content: flex-start;">
+                  <span>⚛️ Full Stack React / Node</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Target Role Option -->
+            <div class="form-group" style="margin-bottom: 24px;">
+              <label class="form-label" for="targetRoleSelect">Target Career Role (Optional benchmark)</label>
+              <select id="targetRoleSelect" class="form-control">
+                <option value="">Auto-Detect Best Matching Role with ML</option>
+                <option value="Python Developer">Python Developer</option>
+                <option value="Data Scientist">Data Scientist</option>
+                <option value="ML Engineer">Machine Learning Engineer</option>
+                <option value="AI Engineer">Artificial Intelligence Engineer</option>
+                <option value="Full Stack Developer">Full Stack Developer</option>
+                <option value="Backend Developer">Backend Developer</option>
+                <option value="Data Analyst">Data Analyst</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Database Developer">Database Developer</option>
+                <option value="DevOps / Cloud Engineer">DevOps / Cloud Engineer</option>
+              </select>
+            </div>
+
+            <!-- Drag & Drop Container -->
+            <div id="dropzone" class="dropzone-container">
+              <input type="file" id="resumeFileInput" accept=".pdf,.docx" style="display: none;">
+              <div class="dropzone-icon">📁</div>
+              <h4 class="dropzone-title">Drag & drop your resume file here</h4>
+              <p class="dropzone-subtitle">Supports PDF (.pdf) or Word (.docx) format up to 15 MB</p>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); document.getElementById('resumeFileInput').click();">
+                Browse From Computer
+              </button>
+            </div>
+
+            <!-- Selected File Information Box -->
+            <div id="selected-file-info" style="display: none; margin-top: 20px; padding: 16px; background-color: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="font-size: 1.5rem;">📄</span>
+                  <div>
+                    <div id="selected-file-name" style="font-weight: 600; color: var(--text-primary);">resume.pdf</div>
+                    <div id="selected-file-size" style="font-size: 0.8rem; color: var(--text-muted);">120 KB</div>
+                  </div>
+                </div>
+                <span class="badge badge-success">Ready For Analysis</span>
+              </div>
+            </div>
+
+            <!-- Start Action Button -->
+            <div style="margin-top: 24px; text-align: right;">
+              <button id="startAnalyzeBtn" class="btn btn-primary btn-lg" disabled>
+                <span>⚡ Start AI Analysis</span>
+              </button>
+            </div>
+
+            <!-- Animated Multi-Stage Scanning Progress Box -->
+            <div id="scan-progress-box" class="scan-progress-box" style="display: none;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4 style="font-size: 1rem; color: var(--accent-cyan);">AI Engine In Progress</h4>
+                <span id="scan-progress-text" style="font-size: 0.84rem; color: var(--text-secondary);">Initializing scan...</span>
+              </div>
+
+              <div class="progress-bar-wrap">
+                <div id="scan-progress-bar" class="progress-bar-fill"></div>
+              </div>
+
+              <div class="scanning-steps-list">
+                <div class="scan-step-item" id="step-upload">
+                  <span>🔹</span>
+                  <span>Secure Document Upload</span>
+                  <span class="step-status" style="margin-left: auto; font-size: 0.8rem;">Waiting...</span>
+                </div>
+                <div class="scan-step-item" id="step-parse">
+                  <span>🔹</span>
+                  <span>PyMuPDF / DOCX Parsing & Contact Extraction</span>
+                  <span class="step-status" style="margin-left: auto; font-size: 0.8rem;">Waiting...</span>
+                </div>
+                <div class="scan-step-item" id="step-skills">
+                  <span>🔹</span>
+                  <span>100+ Skill Dictionary & Taxonomy Identification</span>
+                  <span class="step-status" style="margin-left: auto; font-size: 0.8rem;">Waiting...</span>
+                </div>
+                <div class="scan-step-item" id="step-exp">
+                  <span>🔹</span>
+                  <span>Experience Depth & Education Validation</span>
+                  <span class="step-status" style="margin-left: auto; font-size: 0.8rem;">Waiting...</span>
+                </div>
+                <div class="scan-step-item" id="step-ats">
+                  <span>🔹</span>
+                  <span>6-Factor AI ATS-Style Score Computation</span>
+                  <span class="step-status" style="margin-left: auto; font-size: 0.8rem;">Waiting...</span>
+                </div>
+                <div class="scan-step-item" id="step-recs">
+                  <span>🔹</span>
+                  <span>ML Role Prediction & Tailored Roadmap Synthesis</span>
+                  <span class="step-status" style="margin-left: auto; font-size: 0.8rem;">Waiting...</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/upload.js"></script>
+</body>
+</html>

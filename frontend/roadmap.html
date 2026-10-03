@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Roadmap - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item active">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>Personalized AI Learning Roadmap</h2>
+          <p>Curated milestone curriculum addressing identified skill gaps</p>
+        </div>
+        <div class="topbar-actions" style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <select id="roadmapResumeSelect" class="form-control" style="width: 220px; padding: 6px 12px; font-size: 0.85rem;">
+            <!-- Dynamically populated resumes -->
+          </select>
+          <select id="roadmapRoleSelect" class="form-control" style="width: 200px; padding: 6px 12px; font-size: 0.85rem;">
+            <option value="Python Developer">Python Developer</option>
+            <option value="Data Scientist">Data Scientist</option>
+            <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+            <option value="Full Stack Developer">Full Stack Developer</option>
+            <option value="DevOps & Cloud Systems Engineer">DevOps & Cloud Engineer</option>
+          </select>
+          <button id="regenRoadmapBtn" class="btn btn-primary btn-sm">Update Curriculum</button>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <div style="max-width: 900px; margin: 0 auto;">
+          <!-- Roadmap Overview Card -->
+          <div class="card" style="margin-bottom: 28px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+              <div>
+                <h3 id="roadmap-target-title" style="font-size: 1.3rem; color: var(--text-primary); margin-bottom: 4px;">
+                  Target Role: Python Developer
+                </h3>
+                <p id="roadmap-summary" style="font-size: 0.88rem; color: var(--text-secondary);">
+                  Loading personalized curriculum...
+                </p>
+              </div>
+              <span class="badge badge-success">5 Phased Milestones</span>
+            </div>
+          </div>
+
+          <!-- Timeline UI -->
+          <div class="roadmap-timeline" id="timeline-container">
+            <!-- Dynamically populated phases -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    let activeResumeId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlId = urlParams.get('id');
+      const urlRole = urlParams.get('role');
+
+      const roleSelect = document.getElementById('roadmapRoleSelect');
+      if (urlRole) {
+        // If option doesn't exist, create it dynamically
+        let exists = false;
+        for (let opt of roleSelect.options) {
+          if (opt.value.toLowerCase() === urlRole.toLowerCase()) {
+            opt.selected = true;
+            exists = true;
+            break;
+          }
+        }
+        if (!exists) {
+          const newOpt = document.createElement('option');
+          newOpt.value = urlRole;
+          newOpt.textContent = urlRole;
+          newOpt.selected = true;
+          roleSelect.appendChild(newOpt);
+        }
+      }
+
+      try {
+        const resumes = await apiCall('/resumes');
+        if (!resumes || resumes.length === 0) {
+          document.getElementById('timeline-container').innerHTML = '<p class="text-muted">No resume found. Upload a resume to generate an interactive roadmap.</p>';
+          return;
+        }
+
+        const resSelect = document.getElementById('roadmapResumeSelect');
+        resSelect.innerHTML = resumes.map(r => `
+          <option value="${r.id}" ${urlId == r.id ? 'selected' : ''}>
+            ${r.candidate_name || 'Candidate'} (${r.original_filename})
+          </option>
+        `).join('');
+
+        activeResumeId = urlId || resSelect.value;
+        await loadRoadmap(activeResumeId, roleSelect.value);
+
+        resSelect.addEventListener('change', async (e) => {
+          activeResumeId = e.target.value;
+          await loadRoadmap(activeResumeId, roleSelect.value);
+        });
+
+        document.getElementById('regenRoadmapBtn')?.addEventListener('click', async () => {
+          const selectedRole = roleSelect.value;
+          await loadRoadmap(activeResumeId, selectedRole);
+        });
+      } catch (err) {
+        showToast('Error initializing roadmap: ' + err.message, 'error');
+      }
+    });
+
+    async function loadRoadmap(resumeId, role) {
+      try {
+        let endpoint = `/recommendations/${resumeId}/roadmap`;
+        if (role) endpoint += `?target_role=${encodeURIComponent(role)}`;
+        const data = await apiCall(endpoint);
+
+        document.getElementById('roadmap-target-title').textContent = `Target Role: ${data.target_role}`;
+        document.getElementById('roadmap-summary').textContent = data.summary;
+
+        renderPhases(data.phases || []);
+      } catch (err) {
+        showToast('Failed to load roadmap: ' + err.message, 'error');
+      }
+    }
+
+    function renderPhases(phases) {
+      const container = document.getElementById('timeline-container');
+      if (phases.length === 0) {
+        container.innerHTML = '<p class="text-muted">No phases available.</p>';
+        return;
+      }
+
+      container.innerHTML = phases.map(p => `
+        <div class="timeline-phase">
+          <div class="timeline-node">${p.phase}</div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <h4 style="font-size: 1.1rem; color: var(--text-primary);">${p.title}</h4>
+              <span class="badge badge-primary">Duration: ~${p.duration_weeks} Weeks</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 14px;">
+              ${p.description}
+            </p>
+
+            <div style="margin-bottom: 12px;">
+              <div style="font-size: 0.78rem; text-transform: uppercase; color: var(--accent-cyan); font-weight: 700; margin-bottom: 6px;">
+                Key Topics & Competencies
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                ${p.topics.map(t => `<span class="badge badge-cyan">${t}</span>`).join('')}
+              </div>
+            </div>
+
+            <div style="background-color: var(--bg-surface); padding: 12px; border-radius: var(--radius-sm); border: 1px dashed var(--border-light); margin-top: 10px;">
+              <span style="font-size: 0.8rem; font-weight: 600; color: var(--accent-emerald);">🎯 Capstone Project Prompt:</span>
+              <div style="font-size: 0.84rem; color: var(--text-primary); margin-top: 2px;">
+                ${p.projects.join('; ')}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Report Preview - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .report-sheet {
+      background: white;
+      color: #0f172a;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      font-family: var(--font-main);
+    }
+    .report-sheet h3, .report-sheet h4 {
+      color: #0f172a;
+    }
+    .report-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item active">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>Executive PDF Analysis Report</h2>
+          <p>Official candidate assessment summary ready for HR dispatch</p>
+        </div>
+        <div class="topbar-actions" style="display: flex; gap: 12px;">
+          <select id="reportResumeSelect" class="form-control" style="width: 220px; padding: 6px 12px; font-size: 0.85rem;">
+            <!-- Dynamically populated -->
+          </select>
+          <a id="downloadPdfDirectBtn" href="#" class="btn btn-primary btn-sm" target="_blank">
+            <span>📥 Download PDF</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- In-Browser Printable Sheet Preview -->
+        <div class="report-sheet" id="report-sheet-content">
+          <div class="report-sheet-header">
+            <div>
+              <h2 style="font-size: 1.5rem; color: #0f172a; font-family: var(--font-display); margin-bottom: 4px;">
+                AI RESUME INTELLIGENCE REPORT
+              </h2>
+              <div style="font-size: 0.82rem; color: #64748b;">
+                Production Candidate Screening & Career Analytics
+              </div>
+            </div>
+            <div style="text-align: right; font-size: 0.82rem; color: #64748b;">
+              <div><strong>Document ID:</strong> <span id="rep-id">RES-00001</span></div>
+              <div><strong>Date:</strong> <span id="rep-date">Current Date</span></div>
+            </div>
+          </div>
+
+          <!-- Candidate Info Grid -->
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 16px; margin-bottom: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.88rem;">
+            <div><strong>Candidate:</strong> <span id="rep-cand-name">Alex Johnson</span></div>
+            <div><strong>Email:</strong> <span id="rep-cand-email">alex@domain.com</span></div>
+            <div><strong>Phone:</strong> <span id="rep-cand-phone">+1 234 567</span></div>
+            <div><strong>Experience:</strong> <span id="rep-cand-exp">2.0 Years</span></div>
+            <div><strong>Location:</strong> <span id="rep-cand-loc">Bengaluru</span></div>
+            <div><strong>Top Predicted Role:</strong> <span id="rep-cand-role">Python Developer</span></div>
+          </div>
+
+          <!-- ATS Score Summary -->
+          <h4 style="font-size: 1rem; color: #2563eb; text-transform: uppercase; margin-bottom: 12px; font-weight: 700;">
+            AI ATS-Style Score Breakdown
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 24px; text-align: center;">
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px;">
+              <div id="rep-score-overall" style="font-size: 1.4rem; font-weight: 700; color: #2563eb;">85%</div>
+              <div style="font-size: 0.72rem; color: #64748b; font-weight: 600;">OVERALL</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+              <div id="rep-score-skills" style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">80%</div>
+              <div style="font-size: 0.72rem; color: #64748b;">SKILLS</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+              <div id="rep-score-exp" style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">75%</div>
+              <div style="font-size: 0.72rem; color: #64748b;">EXPERIENCE</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+              <div id="rep-score-edu" style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">85%</div>
+              <div style="font-size: 0.72rem; color: #64748b;">EDUCATION</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+              <div id="rep-score-kw" style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">70%</div>
+              <div style="font-size: 0.72rem; color: #64748b;">KEYWORDS</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+              <div id="rep-score-comp" style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">90%</div>
+              <div style="font-size: 0.72rem; color: #64748b;">COMPLETE</div>
+            </div>
+          </div>
+
+          <!-- Identified Skills -->
+          <h4 style="font-size: 1rem; color: #2563eb; text-transform: uppercase; margin-bottom: 12px; font-weight: 700;">
+            Detected Skills
+          </h4>
+          <div id="rep-skills-box" style="margin-bottom: 24px; font-size: 0.88rem; color: #334155; line-height: 1.6;">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Executive Recommendations -->
+          <h4 style="font-size: 1rem; color: #2563eb; text-transform: uppercase; margin-bottom: 12px; font-weight: 700;">
+            Targeted Improvement Actions
+          </h4>
+          <div id="rep-recs-box" style="font-size: 0.86rem; color: #334155;">
+            <!-- Populated dynamically -->
+          </div>
+
+          <div style="border-top: 1px solid #e2e8f0; margin-top: 32px; padding-top: 16px; text-align: center; font-size: 0.78rem; color: #94a3b8;">
+            Report generated by ResumeAI • Validated with ReportLab & Scikit-learn NLP Engine
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlId = urlParams.get('id');
+
+      try {
+        const resumes = await apiCall('/resumes');
+        const selector = document.getElementById('reportResumeSelect');
+
+        if (!resumes || resumes.length === 0) {
+          document.getElementById('report-sheet-content').innerHTML = '<p class="text-muted" style="text-align: center;">No resumes found.</p>';
+          return;
+        }
+
+        selector.innerHTML = resumes.map(r => `
+          <option value="${r.id}" ${urlId == r.id ? 'selected' : ''}>
+            ${r.candidate_name || 'Candidate'} (${r.original_filename})
+          </option>
+        `).join('');
+
+        const activeId = urlId || selector.value;
+        await loadReportPreview(activeId);
+
+        selector.addEventListener('change', async (e) => {
+          await loadReportPreview(e.target.value);
+        });
+      } catch (err) {
+        showToast('Error loading report preview: ' + err.message, 'error');
+      }
+    });
+
+    async function loadReportPreview(resumeId) {
+      document.getElementById('downloadPdfDirectBtn').href = getAuthDownloadUrl(`/api/reports/${resumeId}/download`);
+      document.getElementById('downloadPdfDirectBtn').target = '_blank';
+
+      try {
+        const data = await apiCall(`/analysis/${resumeId}`);
+        const cand = data.candidate || {};
+        const ats = data.ats_breakdown || {};
+
+        document.getElementById('rep-id').textContent = `RES-${String(resumeId).padStart(5, '0')}`;
+        document.getElementById('rep-date').textContent = new Date().toLocaleDateString();
+
+        document.getElementById('rep-cand-name').textContent = cand.name || 'Candidate';
+        document.getElementById('rep-cand-email').textContent = cand.email || 'Not specified';
+        document.getElementById('rep-cand-phone').textContent = cand.phone || 'Not specified';
+        document.getElementById('rep-cand-exp').textContent = (cand.experience_years || 0) + ' Years';
+        document.getElementById('rep-cand-loc').textContent = cand.location || 'Not Specified';
+        document.getElementById('rep-cand-role').textContent = ats.predicted_role || 'Software Engineer';
+
+        document.getElementById('rep-score-overall').textContent = (ats.overall_ats_score || 0) + '%';
+        document.getElementById('rep-score-skills').textContent = (ats.skills_score || 0) + '%';
+        document.getElementById('rep-score-exp').textContent = (ats.experience_score || 0) + '%';
+        document.getElementById('rep-score-edu').textContent = (ats.education_score || 0) + '%';
+        document.getElementById('rep-score-kw').textContent = (ats.keyword_score || 0) + '%';
+        document.getElementById('rep-score-comp').textContent = (ats.completeness_score || 0) + '%';
+
+        // Skills
+        const skillsObj = data.skills_by_category || {};
+        const skillEntries = Object.entries(skillsObj).map(([cat, list]) => `
+          <div><strong>${cat}:</strong> ${list.join(', ')}</div>
+        `).join('');
+        document.getElementById('rep-skills-box').innerHTML = skillEntries || 'No specific skills mapped.';
+
+        // Recommendations
+        const recs = data.recommendations || [];
+        document.getElementById('rep-recs-box').innerHTML = recs.slice(0, 3).map(r => `
+          <div style="margin-bottom: 8px;">
+            <strong>• [${r.priority}] ${r.title}:</strong> ${r.description}
+          </div>
+        `).join('') || 'No critical recommendations.';
+
+      } catch (err) {
+        showToast('Failed to load candidate report preview: ' + err.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

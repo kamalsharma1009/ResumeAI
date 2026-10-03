@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Prep - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .category-filter-btn {
+      padding: 8px 16px;
+      font-size: 0.84rem;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .category-filter-btn.active, .category-filter-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .question-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: var(--transition);
+    }
+    .question-card:hover {
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item active">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>AI Interview Question Generator</h2>
+          <p>Contextual questions tailored to candidate stack, projects, and target role</p>
+        </div>
+        <div class="topbar-actions">
+          <select id="interviewResumeSelect" class="form-control" style="width: 220px; padding: 6px 12px; font-size: 0.85rem;">
+            <!-- Options dynamically loaded -->
+          </select>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- Category Filters -->
+        <div style="display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;">
+          <button class="category-filter-btn active" data-category="ALL">All Categories</button>
+          <button class="category-filter-btn" data-category="Technical">Technical</button>
+          <button class="category-filter-btn" data-category="Project">Project Architecture</button>
+          <button class="category-filter-btn" data-category="Behavioral">Behavioral</button>
+          <button class="category-filter-btn" data-category="HR">HR & Culture</button>
+        </div>
+
+        <!-- Questions List Container -->
+        <div id="questions-list-container">
+          <!-- Populated dynamically -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script>
+    let allQuestions = [];
+    let currentFilter = 'ALL';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlId = urlParams.get('id');
+      const urlRole = urlParams.get('role');
+
+      try {
+        const resumes = await apiCall('/resumes');
+        const selector = document.getElementById('interviewResumeSelect');
+
+        if (!resumes || resumes.length === 0) {
+          document.getElementById('questions-list-container').innerHTML = '<p class="text-muted">No resumes found. Upload a resume first.</p>';
+          return;
+        }
+
+        selector.innerHTML = resumes.map(r => `
+          <option value="${r.id}" ${urlId == r.id ? 'selected' : ''}>
+            ${r.candidate_name || 'Candidate'} (${r.original_filename})
+          </option>
+        `).join('');
+
+        const activeId = urlId || selector.value;
+        await loadQuestions(activeId, urlRole);
+
+        selector.addEventListener('change', async (e) => {
+          await loadQuestions(e.target.value);
+        });
+
+        // Filter button clicks
+        document.querySelectorAll('.category-filter-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.getAttribute('data-category');
+            renderQuestions();
+          });
+        });
+      } catch (err) {
+        showToast('Error initializing interview prep: ' + err.message, 'error');
+      }
+    });
+
+    async function loadQuestions(resumeId, role = null) {
+      try {
+        let endpoint = `/recommendations/${resumeId}/interview`;
+        if (role) endpoint += `?target_role=${encodeURIComponent(role)}`;
+        allQuestions = await apiCall(endpoint);
+        renderQuestions();
+      } catch (err) {
+        showToast('Failed to fetch interview questions: ' + err.message, 'error');
+      }
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-list-container');
+      const filtered = currentFilter === 'ALL' 
+        ? allQuestions 
+        : allQuestions.filter(q => q.category.toLowerCase() === currentFilter.toLowerCase());
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<p class="text-muted">No questions found for this category.</p>';
+        return;
+      }
+
+      container.innerHTML = filtered.map((q, idx) => {
+        let diffBadge = 'badge-primary';
+        if (q.difficulty === 'Hard') diffBadge = 'badge-danger';
+        if (q.difficulty === 'Medium') diffBadge = 'badge-warning';
+        if (q.difficulty === 'Easy') diffBadge = 'badge-success';
+
+        return `
+          <div class="question-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-primary">${q.category}</span>
+                <span class="badge ${diffBadge}">${q.difficulty}</span>
+                ${q.topic ? `<span style="font-size: 0.8rem; color: var(--text-muted);">${q.topic}</span>` : ''}
+              </div>
+              <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700;">Q${idx + 1}</span>
+            </div>
+
+            <h4 style="font-size: 1.05rem; color: var(--text-primary); margin-bottom: 12px; font-weight: 600;">
+              ${q.question}
+            </h4>
+
+            <div style="background-color: var(--bg-card); border-left: 3px solid var(--accent-cyan); padding: 12px 16px; border-radius: var(--radius-sm); margin-top: 8px;">
+              <span style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: var(--accent-cyan);">
+                💡 Suggested Preparation Points & Key Concepts:
+              </span>
+              <p style="font-size: 0.86rem; color: var(--text-secondary); margin-top: 4px; line-height: 1.5;">
+                ${q.preparation_points}
+              </p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

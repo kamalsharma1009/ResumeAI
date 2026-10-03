@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResumeAI - AI-Powered Resume Intelligence & Career Analytics</title>
+  <meta name="description" content="State-of-the-art AI recruitment & career intelligence platform. Parse resumes, calculate ATS scores, perform skill gap analysis, and build tailored roadmaps.">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    /* Landing Page Specific Enhancements */
+    .hero-section {
+      padding: 100px 24px 80px 24px;
+      text-align: center;
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-full);
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-size: 3.5rem;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #60a5fa 0%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 720px;
+      margin: 0 auto 36px auto;
+      line-height: 1.6;
+    }
+    .hero-cta-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      transition: var(--transition);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+    .feature-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+    .workflow-section {
+      max-width: 1100px;
+      margin: 80px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .workflow-step {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px 20px;
+      position: relative;
+    }
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: white;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px auto;
+    }
+    .stats-banner {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.9) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      text-align: center;
+    }
+    .landing-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-section {
+      border-top: 1px solid var(--border-color);
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <nav class="landing-nav">
+      <a href="/" class="sidebar-logo">
+        <div class="sidebar-logo-icon">AI</div>
+        <span>ResumeAI</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <a href="#features" style="color: var(--text-secondary); font-weight: 500;">Features</a>
+        <a href="#workflow" style="color: var(--text-secondary); font-weight: 500;">How It Works</a>
+        <a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a>
+        <a href="/register.html" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span>✨ MCA Major Project 2026</span>
+        <span>•</span>
+        <span>Enterprise Recruitment Intelligence</span>
+      </div>
+      <h1 class="hero-title">
+        AI-Powered Resume Intelligence & <span>Career Analysis</span>
+      </h1>
+      <p class="hero-subtitle">
+        Analyze resumes, measure job compatibility, identify skill gaps and build personalized career roadmaps with AI.
+      </p>
+      <div class="hero-cta-group">
+        <a href="/upload.html" class="btn btn-primary btn-lg">Analyze Resume</a>
+        <a href="#features" class="btn btn-secondary btn-lg">Explore Features</a>
+      </div>
+    </section>
+
+    <!-- Stats Banner -->
+    <section class="stats-banner">
+      <div>
+        <div style="font-size: 2.4rem; font-weight: 800; font-family: var(--font-display); color: var(--primary);">98.4%</div>
+        <div style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Parser Extraction Accuracy</div>
+      </div>
+      <div>
+        <div style="font-size: 2.4rem; font-weight: 800; font-family: var(--font-display); color: var(--accent-cyan);">100+</div>
+        <div style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Supported Tech Skills</div>
+      </div>
+      <div>
+        <div style="font-size: 2.4rem; font-weight: 800; font-family: var(--font-display); color: var(--accent-emerald);">6-Factor</div>
+        <div style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">ATS Scoring Engine</div>
+      </div>
+      <div>
+        <div style="font-size: 2.4rem; font-weight: 800; font-family: var(--font-display); color: var(--accent-amber);">&lt; 2s</div>
+        <div style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Instant AI Evaluation</div>
+      </div>
+    </section>
+
+    <!-- Core Features Grid -->
+    <section id="features" style="max-width: 1200px; margin: 0 auto; padding: 40px 24px; text-align: center;">
+      <h2 style="font-size: 2.2rem; margin-bottom: 12px;">Engineered for Recruiters & Candidates</h2>
+      <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px auto;">
+        Combining NLP parsing, TF-IDF cosine similarity, and explainable ML role recommendation into a unified SaaS experience.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon-box">📄</div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Deep Resume Parsing</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Extract candidate credentials, degrees, experience timeline, and contact information seamlessly from PDF and DOCX files.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: var(--accent-cyan-light); color: var(--accent-cyan);">🎯</div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">AI ATS-Style Scoring</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Transparent multi-factor algorithm rating skills, formatting, experience depth, action verbs, and completeness out of 100.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: var(--accent-emerald-light); color: var(--accent-emerald);">⚖️</div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Job Compatibility Matching</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Leverage TF-IDF and cosine similarity to compare candidate text against job descriptions, identifying matched and missing skills.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: var(--accent-amber-light); color: var(--accent-amber);">🔍</div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Skill Gap Analysis</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Pinpoint missing skills with priority ratings (Critical, High, Medium) and customized step-by-step learning paths.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box" style="background: var(--accent-rose-light); color: var(--accent-rose);">🧭</div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Personalized Roadmaps</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Generate 5-phase career timelines featuring recommended libraries, duration, weekly milestones, and capstone project prompts.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box">💬</div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 10px;">AI Interview Prep</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Formulate targeted Technical, HR, Project, and Behavioral interview questions tailored to the candidate's exact project stack.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section id="workflow" class="workflow-section">
+      <h2 style="font-size: 2.2rem; margin-bottom: 12px;">How The Platform Operates</h2>
+      <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+        From upload to executive report in four automated steps.
+      </p>
+
+      <div class="workflow-steps">
+        <div class="workflow-step">
+          <div class="step-number">1</div>
+          <h4 style="margin-bottom: 8px;">Upload Resume</h4>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Upload your PDF or DOCX file with drag-and-drop ease.</p>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">2</div>
+          <h4 style="margin-bottom: 8px;">AI Processing</h4>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Parser extracts taxonomy, experience, and action metrics.</p>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">3</div>
+          <h4 style="margin-bottom: 8px;">Career Analysis</h4>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Scoring, role prediction, and skill gaps calculated.</p>
+        </div>
+        <div class="workflow-step">
+          <div class="step-number">4</div>
+          <h4 style="margin-bottom: 8px;">Executive PDF</h4>
+          <p style="color: var(--text-secondary); font-size: 0.85rem;">Download a formal ReportLab PDF analysis document.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section style="background: var(--bg-card); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 80px 24px; text-align: center;">
+      <h2 style="font-size: 2.4rem; margin-bottom: 16px;">Ready to Analyze Your Resume?</h2>
+      <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto 32px auto; font-size: 1.05rem;">
+        Get an objective AI ATS-style breakdown, target job match score, and personalized career roadmap today.
+      </p>
+      <a href="/upload.html" class="btn btn-primary btn-lg">Launch AI Scanner Now</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+      <div style="font-weight: 700; color: var(--text-primary); font-size: 1.1rem;">ResumeAI Intelligence Platform</div>
+      <div>MCA Major Project Demonstration • Built with FastAPI, MySQL, Scikit-learn, ReportLab</div>
+      <div>&copy; 2026 ResumeAI. All rights reserved.</div>
+    </div>
+  </footer>
+
+</body>
+</html>

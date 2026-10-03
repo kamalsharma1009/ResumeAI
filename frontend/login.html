@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    .auth-page-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      position: relative;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      box-shadow: var(--shadow-lg);
+    }
+    .demo-accounts-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: var(--bg-surface);
+      border: 1px dashed var(--border-light);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    .demo-btn-group {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-page-container">
+    <div class="auth-card">
+      <div style="text-align: center; margin-bottom: 28px;">
+        <a href="/" class="sidebar-logo" style="justify-content: center; margin-bottom: 12px;">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+        <h2 style="font-size: 1.5rem; margin-bottom: 6px;">Welcome Back</h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem;">Sign in to access your recruitment dashboard</p>
+      </div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="name@domain.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
+          Sign In
+        </button>
+      </form>
+
+      <div class="demo-accounts-box">
+        <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700;">
+          ⚡ One-Click Demo Accounts
+        </div>
+        <div class="demo-btn-group">
+          <button type="button" class="btn btn-sm btn-secondary" onclick="fillDemoCredentials('admin')">Admin</button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="fillDemoCredentials('hr')">HR Recruiter</button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="fillDemoCredentials('user')">Candidate</button>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 24px; font-size: 0.88rem; color: var(--text-secondary);">
+        Don't have an account? <a href="/register.html" style="font-weight: 600;">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/auth.js"></script>
+</body>
+</html>

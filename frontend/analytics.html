@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Analytics - ResumeAI Intelligence</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="/dashboard.html" class="sidebar-logo">
+          <div class="sidebar-logo-icon">AI</div>
+          <span>ResumeAI</span>
+        </a>
+      </div>
+
+      <div class="sidebar-menu">
+        <div class="menu-category">Main Menu</div>
+        <a href="/dashboard.html" class="menu-item">
+          <i>📊</i> <span>Dashboard</span>
+        </a>
+        <a href="/upload.html" class="menu-item">
+          <i>📤</i> <span>Resume Scanner</span>
+        </a>
+        <a href="/jobs.html" class="menu-item">
+          <i>💼</i> <span>Jobs Management</span>
+        </a>
+        <a href="/candidate.html" class="menu-item">
+          <i>👥</i> <span>Candidates</span>
+        </a>
+
+        <div class="menu-category">Intelligence</div>
+        <a href="/recommendations.html" class="menu-item">
+          <i>🎯</i> <span>Recommendations</span>
+        </a>
+        <a href="/roadmap.html" class="menu-item">
+          <i>🗺️</i> <span>Learning Roadmap</span>
+        </a>
+        <a href="/interview.html" class="menu-item">
+          <i>💬</i> <span>Interview Prep</span>
+        </a>
+
+        <div class="menu-category">Reports & System</div>
+        <a href="/analytics.html" class="menu-item active">
+          <i>📈</i> <span>Analytics</span>
+        </a>
+        <a href="/history.html" class="menu-item">
+          <i>🕒</i> <span>Scan History</span>
+        </a>
+        <a href="/report.html" class="menu-item">
+          <i>📄</i> <span>Executive Reports</span>
+        </a>
+        <a href="/admin.html" class="menu-item">
+          <i>⚙️</i> <span>Admin Panel</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="nav-user-avatar">US</div>
+          <div class="user-info-text">
+            <span class="user-name-title" id="nav-user-name">User</span>
+            <span class="user-role-badge" id="nav-user-role">USER</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline btn-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="app-topbar">
+        <div class="page-title-area">
+          <h2>Recruitment & Skill Analytics</h2>
+          <p>System-wide applicant metrics, talent trends and score distributions</p>
+        </div>
+      </header>
+
+      <main class="app-content">
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">📁</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-total-resumes">0</span>
+              <span class="stat-label">Total Submissions</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon cyan">📊</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-analyzed">0</span>
+              <span class="stat-label">Analyzed Resumes</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon emerald">📈</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-avg-score">0%</span>
+              <span class="stat-label">Average Score</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber">🎯</div>
+            <div class="stat-content">
+              <span class="stat-value" id="stat-avg-match">0%</span>
+              <span class="stat-label">Job Match Avg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 Large Analytics Charts -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">ATS Distribution Histogram</h3>
+              <span class="badge badge-primary">Normalized Buckets</span>
+            </div>
+            <div style="height: 320px; position: relative;">
+              <canvas id="analyticsAtsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Skill Frequency Polar Analysis</h3>
+              <span class="badge badge-cyan">Talent Density</span>
+            </div>
+            <div style="height: 320px; position: relative;">
+              <canvas id="analyticsSkillChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/analytics.js"></script>
+</body>
+</html>
